@@ -42,7 +42,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-	return render_template("index.html")
+	return render_template("index1.html")
 
 @app.route('/',methods = ['POST'])
 def check():
