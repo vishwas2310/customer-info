@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Food Freak | Login</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	
+</head>
+<body>
+ 	
+	<div class="login-page">
+		<div class="form">
+			<form id="name" class="login-form" action="/home" method="post">
+				<input name="name1" type="text" placeholder="Hotel Name"/>
+				<input name="location" type="text"  placeholder="location"/>
+				<input type="submit" value="Add Hotel">
+			<p class="message"><a href="/search">Search Hotels</a></p>
+			</form>
+		</div>
+		<div ><p>{{error}}</p> </div>
+		   	</div>
+	
+</body>
+</html>

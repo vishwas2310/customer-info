@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Food Freak | Login</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script>
+		function myFunction() {
+			var location=document.getElementById('location').value;
+			var ret_data;
+			 $.ajax({
+            url: "/api",
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(location),
+            success: function( data, textStatus, jQxhr ){
+           
+          
+           for(var i=0;i<data.length;i++)
+            {	 
+            	 $( '#display' ).append(data[i]);
+            	 $( '#display' ).append("<br>");
+        
+            //	$document.("#display").text()=
+            	//document.get.elementById("display").innerHTML=document.get.elementById("display").innerHTML+"<br>"+data[i];
+            }
+        }
+
+                
+				});   
+	 
+	
+
+		}
+
+	</script>
+</head>
+<body>
+ 	
+	<div class="login-page">
+		<div class="form">
+			<form id="name">
+				<input id="location" name="location" type="text"  placeholder="location"/>
+				<button type="button" onclick="myFunction()">Search Hotel</button>
+			<p class="message"><a href="/home">Add Hotels</a></p>
+			<p id="display"></p>
+			</form>
+		</div>
+		<div ><p>{{error}}</p> </div>
+		   
+	</div>
+	
+</body>
+</html>
