@@ -27,10 +27,12 @@ class Login(ndb.Model):
     password = ndb.StringProperty()
     name = ndb.StringProperty()
 
-class Hotel(ndb.Model):
+class Customer(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
+    cid = ndb.StringProperty()
     name = ndb.StringProperty()
-    location = ndb.StringProperty()
+    address = ndb.StringProperty()
+    phone=ndb.StringProperty()
        
 if 'DYNO' in os.environ:
     app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -42,7 +44,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-	return render_template("index1.html")
+	log=Login()
+	cust=Customer()
+	return render_template("index.html")
 
 @app.route('/',methods = ['POST'])
 def check():
@@ -83,37 +87,113 @@ def sign2():
 	log.username=usr
 	log.password=pwd
 	log.put()
+	
 	return redirect("/")
 
 @app.route('/home')
 def home1():
 	return  render_template("home.html")
-
-@app.route('/home',methods = ['POST'])
+	
+@app.route('/delete')
+def delete():
+	return  render_template("delete.html")
+	
+@app.route('/del',methods = ['POST'])
+def dele():
+	cid=request.form["cid"]
+	#ndb.Key(Customer,cid).delete()
+	log = Customer.query(Customer.cid==cid)
+	for i in log:
+		#i.name="hell"
+		i.key.delete()
+		
+	#log1 = Customer.cid()
+	
+	#skey=log.get()
+	#print(log.id())
+	#print(log.key.id())
+	#print(log.kind())
+	#print(log.urlsafe())
+	return  redirect('/delete')
+	
+@app.route('/view',methods = ['POST'])
 def home2():
-	name =  request.form["name1"]
-	location=request.form["location"]
-	log = Hotel()
-	log.name=name
-	log.location=location
-	log.put()
-	return  redirect("/home")
+	log = Customer.query()
+	a=[]
+	for i in log:
+		b=[]
+		b.append(i.cid)
+		b.append(i.name)
+		b.append(i.phone)
+		b.append(i.address)
+		a.append(b)
+	"""
+	for i in cust:
+	
+		b=[]
+		b.append[i.cid]
+		b.append[i.name]
+		b.append[i.phone]
+		b.append[i.address]
+		a.append(b)
+		"""
+	#c=len(cust)
+	response = jsonify(a)
+	return response	
 	
 @app.route('/search')
 def search():
 	return  render_template("search.html")
 	
+@app.route('/add')
+def add():
+	return  render_template("add.html")
+	
 @app.route('/api', methods=['POST'])
 def api():
-    input = request.json
-    log = Hotel.query()
-    x=[]
-    for i in log:
-		 if i.location==input:
-			 x.append(i.name)
+	cid=request.form["cid"]
+	name=request.form["name1"]
+	address=request.form["address"]
+	phone=request.form["phone"]
+	log=Customer()
+	log.cid=cid
+	log.name=name
+	log.address=address
+	log.phone=phone
+	log.put()
 	
-    response = jsonify(x)
-    return response	
+	return redirect('/add')
+
+@app.route('/update')
+def update():
+	return  render_template("update.html")	
+
+@app.route('/up', methods=['POST'])
+def up():
+	cid=request.form["cid"]
+	name=request.form["name1"]
+	address=request.form["address"]
+	phone=request.form["phone"]
+	log=Customer().query(Customer.cid==cid)
+	for i in log:
+		if name!="":
+			i.name=name
+		if address!="":
+			i.address=address
+		if phone!="":
+			i.phone=phone
+		i.put()
+		#i.key.delete()
+	
+	
+	
+	#log.cid=cid
+	#log.name=name
+	#log.address=address
+	#log.phone=phone
+	#log.put()
+	
+	return redirect('/update')
 	
 @app.errorhandler(500)
 def server_error(e):
